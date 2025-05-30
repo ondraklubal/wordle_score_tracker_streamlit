@@ -4,9 +4,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from datetime import datetime
 
+import json
+creds_dict = st.secrets["gcp_service_account"]
+
 # Nastavení přístupu
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("C:/Users/klubal/OneDrive - Sazka a.s/Documents/wordle_app_key_google_api.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 # Otevři sheet
