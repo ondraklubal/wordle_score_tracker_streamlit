@@ -3,8 +3,29 @@ import gspread
 from google.oauth2.service_account import Credentials
 import pandas as pd
 from datetime import datetime
-
 import json
+import altair as alt
+
+def plot_player_attempts(player_df):
+    # Vytvořím dataframe s počtem pokusů 1–6 (i pokud je počet 0)
+    all_attempts = pd.DataFrame({'Attempt': list(range(1,7))})
+    counts = player_df['score'].value_counts().reset_index()
+    counts.columns = ['Attempt', 'Count']
+    counts['Attempt'] = counts['Attempt'].astype(int)
+    chart_df = all_attempts.merge(counts, on='Attempt', how='left').fillna(0)
+
+    chart = (
+        alt.Chart(chart_df)
+        .mark_bar()
+        .encode(
+            x=alt.X('Attempt:O', title='Attempt Number'),
+            y=alt.Y('Count:Q', title='Count', scale=alt.Scale(domain=[0, chart_df['Count'].max()+1])),
+            tooltip=['Attempt', 'Count']
+        )
+        .properties(width=400, height=200)
+        .configure_axis(grid=False)
+    )
+    return chart
 
 creds_dict = st.secrets["gcp_service_account"]
 
@@ -50,6 +71,7 @@ for player in players:
     # Graf podle počtu pokusů
     chart_df = player_df["score"].value_counts().sort_index().reset_index()
     chart_df.columns = ["Attempt", "Count"]
-    st.bar_chart(chart_df.set_index("Attempt"))
+    if not player_df.empty:
+        st.altair_chart(plot_player_attempts(player_df), use_container_width=True)
 
     st.markdown("---")
