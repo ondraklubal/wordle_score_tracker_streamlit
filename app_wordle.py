@@ -17,7 +17,7 @@ sheet = client.open("wordle_scores").sheet1
 
 players = ["Ondra", "Lucie", "Tomáš"]
 
-st.title("Wordle Score Tracker (Google Sheets)")
+st.title("Wordle Score Tracker")
 
 # Načti data jako DataFrame
 data = sheet.get_all_records()
