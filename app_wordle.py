@@ -9,7 +9,7 @@ creds_dict = st.secrets["gcp_service_account"]
 
 # Nastavení přístupu
 scope = ["https://www.googleapis.com/auth/drive"]
-creds = Credentials.from_service_account_file(dict(creds_dict), scopes=scope)
+creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
 client = gspread.authorize(creds)
 
 # Otevři sheet
