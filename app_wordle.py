@@ -6,10 +6,7 @@ from datetime import datetime
 
 import json
 
-def delete_last_score(player, worksheet):
-    import datetime
-    all_data = worksheet.get_all_records()
-    df = pd.DataFrame(all_data)
+def delete_last_score(player, sheet):
 
     # Odfiltruj hráčovy skóre
     player_scores = df[df["player"] == player]
@@ -20,7 +17,7 @@ def delete_last_score(player, worksheet):
     last_index = player_scores.index[-1]
 
     # Odstraníme řádek z Google Sheets (nutno +2 kvůli hlavičce a 0-indexaci)
-    worksheet.delete_rows(last_index + 2)
+    sheet.delete_rows(last_index + 2)
     return True
 
 
@@ -55,7 +52,7 @@ for player in players:
         st.success("Skóre přidáno!")
 
     if st.button(f"Smazat poslední skóre pro {player}"):
-        success = delete_last_score(player, worksheet)
+        success = delete_last_score(player, sheet)
         if success:
             st.success(f"Poslední skóre hráče {player} smazáno.")
         else:
