@@ -10,7 +10,7 @@ creds_dict = st.secrets["gcp_service_account"]
 # Nastavení přístupu
 scope = ["https://www.googleapis.com/auth/drive"]
 creds = Credentials.from_service_account_file(creds_dict, scopes=scope)
-client = gspread.authorize(creds)
+client = gspread.authorize(dict(creds))
 
 # Otevři sheet
 sheet = client.open("wordle_scores").sheet1
