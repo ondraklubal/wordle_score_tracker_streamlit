@@ -1,7 +1,6 @@
 import streamlit as st
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
+from google.oauth2.service_account import Credentialsimport pandas as pd
 from datetime import datetime
 
 import json
@@ -9,7 +8,7 @@ creds_dict = st.secrets["gcp_service_account"]
 
 # Nastavení přístupu
 scope = ["https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+creds = Credentials.from_service_account_file(creds_dict, scopes=scope)
 client = gspread.authorize(creds)
 
 # Otevři sheet
