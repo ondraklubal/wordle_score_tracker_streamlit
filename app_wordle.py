@@ -8,7 +8,7 @@ import json
 creds_dict = st.secrets["gcp_service_account"]
 
 # Nastavení přístupu
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+scope = ["https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
