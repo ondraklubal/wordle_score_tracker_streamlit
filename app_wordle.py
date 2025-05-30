@@ -5,6 +5,25 @@ import pandas as pd
 from datetime import datetime
 
 import json
+
+def delete_last_score(player, worksheet):
+    import datetime
+    all_data = worksheet.get_all_records()
+    df = pd.DataFrame(all_data)
+
+    # Odfiltruj hráčovy skóre
+    player_scores = df[df["player"] == player]
+    if player_scores.empty:
+        return False  # nic ke smazání
+
+    # Najdi index posledního záznamu
+    last_index = player_scores.index[-1]
+
+    # Odstraníme řádek z Google Sheets (nutno +2 kvůli hlavičce a 0-indexaci)
+    worksheet.delete_rows(last_index + 2)
+    return True
+
+
 creds_dict = st.secrets["gcp_service_account"]
 
 # Nastavení přístupu
@@ -29,11 +48,19 @@ for player in players:
     score_input = st.number_input(
         f"Add score for {player} (1-6)", min_value=1, max_value=6, step=1, key=f"score_{player}"
     )
+    
     if st.button(f"Přidat skóre pro {player}", key=f"add_{player}"):
         timestamp = datetime.now().isoformat()
         sheet.append_row([player, int(score_input), timestamp])
         st.success("Skóre přidáno!")
 
+    if st.button(f"Smazat poslední skóre pro {player}"):
+        success = delete_last_score(player, worksheet)
+        if success:
+            st.success(f"Poslední skóre hráče {player} smazáno.")
+        else:
+            st.warning(f"{player} zatím nemá žádné skóre k odstranění.")
+            
     player_df = df[df["player"] == player]
     scores = player_df["score"].astype(int).tolist()
     total = len(scores)
