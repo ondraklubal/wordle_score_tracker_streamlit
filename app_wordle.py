@@ -68,7 +68,7 @@ for player in players:
     last5 = [s if s > 0 else "–" for s in scores[-5:]]
 
     st.write(f"Počet odehraných her: {total}")
-    st.write(f"Počet dnů, kdy Wordle nevyšel/nebyl: {skipped}")
+    st.write(f"Počet dnů, kdy Wordle nevyšel: {skipped}")
     st.write(f"Průměr: {avg}")
     st.write(f"Posledních 5: {last5 if last5 else '—'}")
 
