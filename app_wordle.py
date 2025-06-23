@@ -55,7 +55,8 @@ for player in players:
     )
     
     if st.button(f"Přidat skóre pro {player}", key=f"add_{player}"):
-        timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+        cesky_cas = datetime.utcnow() + timedelta(hours=2)
+        timestamp = cesky_cas.strftime("%d.%m.%Y %H:%M:%S")
         score_to_save = 0 if score_input == "–" else int(score_input)
         sheet.append_row([player, score_to_save, timestamp])
         st.success("Záznam přidán!")
