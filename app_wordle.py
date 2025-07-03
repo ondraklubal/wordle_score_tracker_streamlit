@@ -49,9 +49,9 @@ for player in players:
     st.header(player)
 
     score_input = st.selectbox(
-    f"Zadej skóre pro {player} (1–6 nebo Nevyšlo)", 
-    options=["–", 1, 2, 3, 4, 5, 6], 
-    key=f"score_{player}"
+        f"Zadej skóre pro {player} (1–6 nebo Nevyšlo)", 
+        options=["–", 1, 2, 3, 4, 5, 6], 
+        key=f"score_{player}"
     )
     
     if st.button(f"Přidat skóre pro {player}", key=f"add_{player}"):
@@ -63,19 +63,19 @@ for player in players:
             
     player_df = df[df["player"] == player]
     scores = player_df["score"].astype(int).tolist()
-    total = len([s for s in scores if s > 0])
-    skipped = len([s for s in scores if s == 0])
-    avg = round(sum([s for s in scores if s > 0]) / total, 2) if total else 0
+    # ============= Zde nový výpočet průměru včetně nezvládnuto jako 7 ============
+    avg_scores = [s if s > 0 else 7 for s in scores]
+    total = len(avg_scores)
+    skipped = scores.count(0)
+    avg = round(sum(avg_scores) / total, 2) if total else 0
     last5 = [s if s > 0 else "–" for s in scores[-5:]]
+    # ============================================================================
 
     st.write(f"Počet odehraných her: {total}")
     st.write(f"Počet dnů, kdy Wordle nevyšel: {skipped}")
     st.write(f"Průměr: {avg}")
     st.write(f"Posledních 5: {last5 if last5 else '—'}")
 
-    # Graf podle počtu pokusů
-    chart_df = player_df["score"].value_counts().sort_index().reset_index()
-    chart_df.columns = ["Attempt", "Count"]
     if not player_df.empty:
         st.altair_chart(plot_player_attempts(player_df), use_container_width=True)
 
